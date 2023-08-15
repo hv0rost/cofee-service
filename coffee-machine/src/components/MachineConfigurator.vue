@@ -2,14 +2,14 @@
     <div class="options">
       <div class="select">
         <div>Выберете размер устройства:</div>
-        <select>
+        <select v-model="size">
           <option>Стандартный</option>
           <option>Увеличиный</option>
         </select>
       </div>
       <div class="select drinks">
         <div>Выберете количесвто напитков:</div>
-        <select>
+        <select v-model="drinksCount">
           <option>6</option>
           <option>8</option>
           <option>12</option>
@@ -17,10 +17,9 @@
       </div>
     </div>
 
-
-
   <div class="imgContainer">
-    <img v-if="small" :src="small">
+    <h3>Кофемашина E{{drinksCount}} Piano Limited edition | Размер - {{size}}</h3>
+    <img v-if="size === 'Стандартный'" :src="small">
     <img v-else :src="large">
     <div>Добавить в хранилище</div>
   </div>
@@ -31,13 +30,21 @@
 <script>
 import smallMachine from '../assets/small-machine.png'
 import largeMachine from '../assets/large-machine.png'
+import {ref, watch} from "vue";
 
 export default {
-  setup () {
+  setup() {
     const small = smallMachine;
     const large = largeMachine;
 
-    return {small, large}
+    const size = ref('Стандартный')
+    const drinksCount = ref(6)
+
+    watch(drinksCount, (drinksCount) => {
+      console.log(drinksCount)
+    });
+
+    return {small, large, size, drinksCount}
   }
 }
 </script>
@@ -52,6 +59,7 @@ $secondary : #088566;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  text-align: center;
 
   div {
     margin-top: 10px;
@@ -62,6 +70,9 @@ $secondary : #088566;
     text-underline-offset: 4px;
     font-size: 20px;
   }
+  h3 {
+    color: #FFFFFF;
+  }
 
   div:hover {
     cursor: pointer;
@@ -71,6 +82,7 @@ $secondary : #088566;
   img {
     width: 100%;
     max-width: 350px;
+    max-height: 400px;
   }
 }
 .options {

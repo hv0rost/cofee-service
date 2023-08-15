@@ -2,19 +2,18 @@
 
   <div class="main">
     <div class="header">
-      <div>Конфигурация кофе-машины</div>
-      <div>Список добавленных позиций</div>
+      <router-link class="link" to="/">Конфигурация кофе-машины</router-link>
+      <router-link class="link" to="/list">Список добавленных позиций</router-link>
     </div>
-    <MachineConfigurator />
+
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import MachineConfigurator from "@/components/MachineConfigurator";
 
 export default {
   name: 'App',
-  components: { MachineConfigurator }
 }
 </script>
 
@@ -28,12 +27,12 @@ $primary : rgba(255,255,255,.4);
 }
 .header {
   min-height: 40px;
-  border-bottom: 1px solid #088566;
+  border-bottom: 2px solid #088566;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
 
-  div {
+  .link {
     align-self: center;
     margin: 0;
     padding: 10px;
@@ -41,8 +40,9 @@ $primary : rgba(255,255,255,.4);
     color: $primary;
     text-align: center;
     font-weight: normal;
+    text-decoration: none;
   }
-  div:hover {
+  .link:hover {
     color: #FFF;
     cursor: pointer;
   }
