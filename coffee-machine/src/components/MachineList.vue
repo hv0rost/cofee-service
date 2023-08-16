@@ -5,35 +5,70 @@
       <img v-if="item.size === 'Стандартный'" src="../assets/small-machine.png">
       <img v-else src="../assets/large-machine.png">
       <div class="counter">
-        <div class="btn">-</div>
+        <div class="btn" @click="decreaseCounter(index)">-</div>
         <div>{{ item.count }}</div>
-        <div class="btn" >+</div>
+        <div class="btn" @click="increaseCounter(index)">+</div>
       </div>
     </div>
   </div>
+  <div class="emptyMsg" v-if="list.length === 0">Список добавленных позиций пока пуст</div>
 
 </template>
 
 <script>
-export default {
-  setup () {
-    const list = [{
-      size : "Увеличиный",
-      drinksCount : 6,
-      count : 1
-    },
-    {
-      size : "Стандартный",
-      drinksCount : 8,
-      count : 3
-    },
-    {
-      size : "Стандартный",
-      drinksCount : 12,
-      count : 2
-    }];
+import {ref} from "vue";
+import {useStore} from "vuex";
 
-    return {list}
+export default {
+  async setup () {
+    const store = useStore();
+    store.commit('clearCounter')
+    const list = ref();
+
+    try {
+      const response = await fetch('http://localhost:3030/');
+      list.value = await response.json();
+    }
+    catch (err) {
+      console.log(err)
+    }
+
+    async function increaseCounter(index) {
+      try {
+        await fetch('http://localhost:3030/increase', {
+          method : 'PATCH',
+          body : JSON.stringify({index: index}),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        });
+        list.value[index].count += 1;
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+
+    async function decreaseCounter(index) {
+      try {
+        await fetch('http://localhost:3030/decrease', {
+          method : 'PATCH',
+          body : JSON.stringify({index: index}),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        });
+        list.value[index].count -= 1;
+        if (list.value[index].count === 0) {
+          list.value.splice(index, 1)
+        }
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+
+    return {list, increaseCounter, decreaseCounter}
   }
 }
 </script>
@@ -41,6 +76,14 @@ export default {
 <style scoped lang="scss">
 $primary : rgba(255,255,255,.4);
 $secondary : #088566;
+
+.emptyMsg {
+  color: $primary;
+  font-size: 30px;
+  font-weight: bolder;
+  text-align: center;
+  margin: 20px;
+}
 
 .items {
   display: flex;

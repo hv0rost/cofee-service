@@ -21,26 +21,41 @@
     <h3>Кофемашина E{{drinksCount}} Piano Limited edition | Размер - {{size}}</h3>
     <img v-if="size === 'Стандартный'" src="../assets/small-machine.png">
     <img v-else src="../assets/large-machine.png">
-    <div>Добавить в хранилище</div>
+    <div @click="addToStorage">Добавить в хранилище</div>
   </div>
-
-
 </template>
 
 <script>
-
-import {ref, watch} from "vue";
+import {ref} from "vue";
+import { useStore } from 'vuex'
 
 export default {
   setup() {
-    const size = ref('Стандартный')
-    const drinksCount = ref(6)
+    const size = ref('Стандартный');
+    const drinksCount = ref(6);
+    const store = useStore();
 
-    watch(drinksCount, (drinksCount) => {
-      console.log(drinksCount)
-    });
+    async function addToStorage() {
+      try {
+        await fetch('http://localhost:3030/', {
+          method : 'POST',
+          body : JSON.stringify({
+            size: size.value,
+            drinksCount : drinksCount.value,
+            count : 1
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        });
+        store.commit('incrementCounter')
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
 
-    return {size, drinksCount}
+    return {size, drinksCount, addToStorage}
   }
 }
 </script>
@@ -48,6 +63,18 @@ export default {
 <style scoped lang="scss">
 $primary : rgba(255,255,255,.4);
 $secondary : #088566;
+
+.popup {
+
+  position: absolute;
+  bottom: 5%;
+  left: 45.5%;
+  border-radius: 6px;
+  background: #088566;
+  color: #FFFFFF;
+  text-align: center;
+  padding: 10px;
+}
 
 .imgContainer {
   margin-top: 20px;
