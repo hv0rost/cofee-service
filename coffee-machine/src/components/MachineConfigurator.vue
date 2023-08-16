@@ -19,8 +19,8 @@
 
   <div class="imgContainer">
     <h3>Кофемашина E{{drinksCount}} Piano Limited edition | Размер - {{size}}</h3>
-    <img v-if="size === 'Стандартный'" :src="small">
-    <img v-else :src="large">
+    <img v-if="size === 'Стандартный'" src="../assets/small-machine.png">
+    <img v-else src="../assets/large-machine.png">
     <div>Добавить в хранилище</div>
   </div>
 
@@ -28,15 +28,11 @@
 </template>
 
 <script>
-import smallMachine from '../assets/small-machine.png'
-import largeMachine from '../assets/large-machine.png'
+
 import {ref, watch} from "vue";
 
 export default {
   setup() {
-    const small = smallMachine;
-    const large = largeMachine;
-
     const size = ref('Стандартный')
     const drinksCount = ref(6)
 
@@ -44,7 +40,7 @@ export default {
       console.log(drinksCount)
     });
 
-    return {small, large, size, drinksCount}
+    return {size, drinksCount}
   }
 }
 </script>
